@@ -1,0 +1,183 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  GUEST
+  HOST
+  ADMIN
+  STAFF
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+  REFUNDED
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  password      String
+  firstName     String
+  lastName      String
+  phone         String?
+  role          UserRole  @default(GUEST)
+  avatar        String?
+  emailVerified Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  properties    Property[]
+  bookings      Booking[]
+  reviews       Review[]
+  payments      Payment[]
+
+  @@index([email])
+}
+
+model Property {
+  id          String   @id @default(cuid())
+  name        String
+  description String
+  address     String
+  city        String
+  state       String
+  country     String
+  zipCode     String
+  latitude    Float?
+  longitude   Float?
+  type        String   // hotel, resort, vacation_rental
+  amenities   String[] // JSON array
+  images      String[] // JSON array of S3 URLs
+  basePrice   Float
+  currency    String   @default("USD")
+  maxGuests   Int
+  bedrooms    Int
+  beds        Int
+  bathrooms   Int
+  rating      Float    @default(0)
+  reviewCount Int      @default(0)
+  isActive    Boolean  @default(true)
+  hostId      String
+  host        User     @relation(fields: [hostId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  rooms       Room[]
+  bookings    Booking[]
+  reviews     Review[]
+  availability Availability[]
+
+  @@index([city])
+  @@index([hostId])
+  @@index([isActive])
+}
+
+model Room {
+  id         String   @id @default(cuid())
+  name       String
+  type       String   // single, double, suite, penthouse
+  price      Float
+  maxGuests  Int
+  beds       Int
+  amenities  String[]
+  propertyId String
+  property   Property @relation(fields: [propertyId], references: [id])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([propertyId])
+}
+
+model Availability {
+  id         String   @id @default(cuid())
+  date       DateTime
+  available  Boolean  @default(true)
+  price      Float?
+  propertyId String
+  property   Property @relation(fields: [propertyId], references: [id])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([propertyId, date])
+  @@index([date])
+}
+
+model Booking {
+  id            String        @id @default(cuid())
+  checkIn       DateTime
+  checkOut      DateTime
+  guests        Int
+  totalPrice    Float
+  status        BookingStatus @default(PENDING)
+  specialRequests String?
+  userId        String
+  user          User          @relation(fields: [userId], references: [id])
+  propertyId    String
+  property      Property      @relation(fields: [propertyId], references: [id])
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  payments      Payment[]
+
+  @@index([userId])
+  @@index([propertyId])
+  @@index([status])
+  @@index([checkIn, checkOut])
+}
+
+model Payment {
+  id          String        @id @default(cuid())
+  amount      Float
+  currency    String        @default("USD")
+  status      PaymentStatus @default(PENDING)
+  stripeId    String?
+  method      String        // card, wallet, bnpl
+  bookingId   String
+  booking     Booking       @relation(fields: [bookingId], references: [id])
+  userId      String
+  user        User          @relation(fields: [userId], references: [id])
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@index([bookingId])
+  @@index([userId])
+  @@index([stripeId])
+}
+
+model Review {
+  id          String   @id @default(cuid())
+  rating      Float    // 1-5
+  cleanliness Float?
+  location    Float?
+  service     Float?
+  value       Float?
+  comment     String?
+  photos      String[] // JSON array
+  verified    Boolean  @default(false)
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  propertyId  String
+  property    Property @relation(fields: [propertyId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([propertyId])
+  @@index([userId])
+  @@index([rating])
+}
