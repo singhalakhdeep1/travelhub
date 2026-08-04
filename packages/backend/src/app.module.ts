@@ -12,6 +12,11 @@ import { NotificationsModule } from './notifications/notifications.module';
 import { AnalyticsModule } from './analytics/analytics.module';
 import { CacheModule } from './cache/cache.module';
 import { QueueModule } from './queue/queue.module';
+import { AISearchModule } from './ai-search/ai-search.module';
+import { ReviewSummaryModule } from './review-summary/review-summary.module';
+import { PricingModule } from './pricing/pricing.module';
+import { CoHostModule } from './co-host/co-host.module';
+import { TourModule } from './tour/tour.module';
 
 @Module({
   imports: [
@@ -30,6 +35,11 @@ import { QueueModule } from './queue/queue.module';
     AnalyticsModule,
     CacheModule,
     QueueModule,
+    AISearchModule,
+    ReviewSummaryModule,
+    PricingModule,
+    CoHostModule,
+    TourModule,
   ],
 })
 export class AppModule {}

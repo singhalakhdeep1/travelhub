@@ -181,3 +181,112 @@ model Review {
   @@index([userId])
   @@index([rating])
 }
+
+// AI Smart Search
+model SearchQuery {
+  id        String   @id @default(cuid())
+  userId    String?
+  query     String
+  filters   Json     // Extracted filters
+  results   Json     // Search results
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model PropertyVector {
+  id        String   @id @default(cuid())
+  propertyId String  @unique
+  embedding Float[]  // Vector embedding for semantic search
+  updatedAt DateTime @updatedAt
+}
+
+// AI Review Summaries
+model ReviewSummary {
+  id          String   @id @default(cuid())
+  propertyId  String   @unique
+  summary     Json     // Structured summary
+  reviewCount Int
+  cachedAt    DateTime @default(now())
+  expiresAt   DateTime
+}
+
+// Dynamic Pricing Tips
+model PricingTip {
+  id          String   @id @default(cuid())
+  propertyId  String
+  suggestedPrice Json
+  factors     Json
+  confidence  Float
+  generatedAt DateTime @default(now())
+
+  @@index([propertyId, generatedAt])
+}
+
+// Co-Host Network
+model CoHost {
+  id                String   @id @default(cuid())
+  userId            String   @unique
+  skills            String[]
+  services          String[]
+  rates             Json     // Pricing structure
+  availability      String[]
+  bio               String?
+  rating            Float    @default(0)
+  propertiesManaged Int      @default(0)
+  isActive          Boolean  @default(true)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  relations         HostCoHostRelation[]
+  reviews           CoHostReview[]
+}
+
+model HostCoHostRelation {
+  id          String   @id @default(cuid())
+  hostId      String
+  coHostId    String
+  propertyId  String
+  terms       Json     // Agreement terms
+  status      String   // PENDING, ACTIVE, TERMINATED
+  startDate   DateTime
+  endDate     DateTime?
+  createdAt   DateTime @default(now())
+
+  @@unique([hostId, coHostId, propertyId])
+}
+
+model CoHostReview {
+  id          String   @id @default(cuid())
+  coHostId    String
+  hostId      String
+  rating      Float
+  comment     String?
+  createdAt   DateTime @default(now())
+
+  @@index([coHostId])
+}
+
+// Interactive 3D Tours
+model PropertyTour {
+  id          String   @id @default(cuid())
+  propertyId  String   @unique
+  scenes      Json     // Scene definitions
+  navigation  Json     // Navigation graph
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model TourScene {
+  id          String   @id @default(cuid())
+  tourId      String
+  name        String
+  modelUrl    String
+  thumbnailUrl String
+  position    Json     // { x, y, z }
+  rotation    Json     // { x, y, z }
+  hotspots    Json     // Interactive hotspots
+  createdAt   DateTime @default(now())
+
+  @@index([tourId])
+}
