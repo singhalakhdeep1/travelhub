@@ -43,18 +43,18 @@
 
 <script setup lang="ts">
 import * as THREE from 'three'
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
 const props = defineProps<{ propertyId: string }>()
-const container = ref<HTMLElement>()
-const { data: tour } = await useFetch(`/api/properties/${props.propertyId}/tours`)
+const container = ref<HTMLElement | null>(null)
+const { data: tour } = await useFetch<any>(`/api/properties/${props.propertyId}/tours`)
 
-const scenes = computed(() => tour.value?.scenes || [])
+const scenes = computed(() => (tour.value?.scenes as any[]) || [])
 const currentSceneIndex = ref(0)
 const currentScene = computed(() => scenes.value[currentSceneIndex.value])
 const currentHotspots = computed(() => currentScene.value?.hotspots || [])
-const selectedHotspot = ref(null)
+const selectedHotspot = ref<any>(null)
 
 let scene: THREE.Scene
 let camera: THREE.PerspectiveCamera
@@ -77,19 +77,20 @@ const initThreeJS = () => {
   scene = new THREE.Scene()
   scene.background = new THREE.Color(0xf0f0f0)
   
+  const el = container.value!
   camera = new THREE.PerspectiveCamera(
     75,
-    container.value.clientWidth / container.value.clientHeight,
+    el.clientWidth / el.clientHeight,
     0.1,
     1000
   )
   camera.position.set(0, 2, 5)
-  
+
   renderer = new THREE.WebGLRenderer({ antialias: true })
-  renderer.setSize(container.value.clientWidth, container.value.clientHeight)
+  renderer.setSize(el.clientWidth, el.clientHeight)
   renderer.setPixelRatio(window.devicePixelRatio)
   renderer.shadowMap.enabled = true
-  container.value.appendChild(renderer.domElement)
+  el.appendChild(renderer.domElement)
   
   controls = new OrbitControls(camera, renderer.domElement)
   controls.enableDamping = true
@@ -117,7 +118,7 @@ const loadScene = (sceneData: any) => {
   }
   
   const loader = new GLTFLoader()
-  loader.load(sceneData.modelUrl, (gltf) => {
+  loader.load(sceneData.modelUrl, (gltf: any) => {
     currentModel = gltf.scene
     currentModel.position.set(
       sceneData.position?.x || 0,
@@ -140,6 +141,7 @@ const animate = () => {
 }
 
 const onWindowResize = () => {
+  if (!container.value) return
   camera.aspect = container.value.clientWidth / container.value.clientHeight
   camera.updateProjectionMatrix()
   renderer.setSize(container.value.clientWidth, container.value.clientHeight)

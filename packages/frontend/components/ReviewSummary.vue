@@ -62,7 +62,7 @@
 
 <script setup lang="ts">
 const props = defineProps<{ propertyId: string }>()
-const { data: summary, pending: loading } = await useFetch(`/api/properties/${props.propertyId}/review-summary`)
+const { data: summary, pending: loading } = await useFetch<any>(`/api/properties/${props.propertyId}/review-summary`)
 </script>
 
 <style scoped>

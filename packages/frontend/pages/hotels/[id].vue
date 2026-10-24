@@ -117,8 +117,8 @@ import { ref, computed, onMounted } from 'vue';
 
 const route = useRoute();
 const loading = ref(true);
-const hotel = ref(null);
-const selectedRoom = ref(null);
+const hotel = ref<any>(null);
+const selectedRoom = ref<any>(null);
 const booking = ref({
   checkIn: '',
   checkOut: '',
@@ -177,9 +177,7 @@ const formatDate = (date: string) => {
 };
 
 const bookHotel = () => {
-  navigateTo('/checkout', {
-    query: { type: 'hotel', id: route.params.id, roomId: selectedRoom.value.id },
-  });
+  navigateTo(`/checkout?type=hotel&id=${route.params.id}&roomId=${selectedRoom.value?.id}`);
 };
 </script>
 

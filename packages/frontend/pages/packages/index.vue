@@ -94,7 +94,7 @@ const search = ref({
 });
 
 const loading = ref(false);
-const results = ref([]);
+const results = ref<any[]>([]);
 
 const searchPackages = async () => {
   loading.value = true;
@@ -148,7 +148,7 @@ const searchPackages = async () => {
 };
 
 const selectPackage = (pkg: any) => {
-  navigateTo('/checkout', { query: { type: 'package', id: pkg.id } });
+  navigateTo(`/checkout?type=package&id=${pkg.id}`);
 };
 </script>
 

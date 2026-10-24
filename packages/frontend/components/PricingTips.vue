@@ -70,7 +70,7 @@
 
 <script setup lang="ts">
 const props = defineProps<{ propertyId: string; currentPrice: number }>()
-const { data: tips, pending: loading } = await useFetch(`/api/properties/${props.propertyId}/pricing-tips`)
+const { data: tips, pending: loading } = await useFetch<any>(`/api/properties/${props.propertyId}/pricing-tips`)
 
 const applyPrice = async () => {
   await $fetch(`/api/properties/${props.propertyId}`, {

@@ -1,21 +1,21 @@
 import { Injectable } from '@nestjs/common';
-import Queue from 'bull';
+import Bull from 'bull';
 import { NotificationsService } from '../notifications/notifications.service';
 
 @Injectable()
 export class QueueService {
-  private bookingQueue: Queue;
-  private notificationQueue: Queue;
+  private bookingQueue: Bull.Queue;
+  private notificationQueue: Bull.Queue;
 
   constructor(private notificationsService: NotificationsService) {
-    this.bookingQueue = new Queue('bookings', {
+    this.bookingQueue = new Bull('bookings', {
       redis: {
         host: process.env.REDIS_HOST || 'localhost',
         port: parseInt(process.env.REDIS_PORT || '6379'),
       },
     });
 
-    this.notificationQueue = new Queue('notifications', {
+    this.notificationQueue = new Bull('notifications', {
       redis: {
         host: process.env.REDIS_HOST || 'localhost',
         port: parseInt(process.env.REDIS_PORT || '6379'),

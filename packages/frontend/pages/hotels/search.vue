@@ -119,13 +119,13 @@ const filters = ref({
   minPrice: null,
   maxPrice: null,
   stars: 'any',
-  amenities: [],
+  amenities: [] as string[],
   freeCancellation: false,
 });
 
 const viewMode = ref('list');
 const loading = ref(false);
-const results = ref([]);
+const results = ref<any[]>([]);
 const allAmenities = ref(['WiFi', 'Pool', 'Gym', 'Spa', 'Restaurant', 'Parking', 'Breakfast']);
 
 const filteredHotels = computed(() => {

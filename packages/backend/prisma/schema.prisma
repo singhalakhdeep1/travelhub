@@ -246,19 +246,22 @@ model HostCoHostRelation {
   id          String   @id @default(cuid())
   hostId      String
   coHostId    String
+  coHost      CoHost   @relation(fields: [coHostId], references: [id])
   propertyId  String
-  terms       Json     // Agreement terms
-  status      String   // PENDING, ACTIVE, TERMINATED
+  terms       Json
+  status      String
   startDate   DateTime
   endDate     DateTime?
   createdAt   DateTime @default(now())
 
   @@unique([hostId, coHostId, propertyId])
+  @@index([coHostId])
 }
 
 model CoHostReview {
   id          String   @id @default(cuid())
   coHostId    String
+  coHost      CoHost   @relation(fields: [coHostId], references: [id])
   hostId      String
   rating      Float
   comment     String?

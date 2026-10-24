@@ -7,6 +7,10 @@ node_modules/
 coverage/
 *.lcov
 
+# Nuxt
+.nuxt/
+.output/
+
 # Next.js
 .next/
 out/

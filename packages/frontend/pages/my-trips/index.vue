@@ -55,7 +55,7 @@ import { ref, computed, onMounted } from 'vue';
 
 const activeTab = ref('upcoming');
 const loading = ref(true);
-const trips = ref([]);
+const trips = ref<any[]>([]);
 
 const filteredTrips = computed(() => {
   return trips.value.filter((trip: any) => {

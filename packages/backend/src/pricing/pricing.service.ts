@@ -121,7 +121,8 @@ export class PricingService {
       ? similar.reduce((sum, p) => sum + p.basePrice, 0) / similar.length
       : property.basePrice;
 
-    const adjustments = Object.values(factors).reduce(
+    const factorValues = factors as Record<string, any>;
+    const adjustments = Object.values(factorValues).reduce(
       (sum: number, f: any) => sum + (typeof f === 'number' ? f : 0),
       0,
     );

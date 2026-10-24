@@ -5,10 +5,7 @@ const api = $fetch.create({
   onRequest({ options }) {
     const token = localStorage.getItem('token')
     if (token) {
-      options.headers = {
-        ...options.headers,
-        Authorization: `Bearer ${token}`
-      }
+      (options.headers as any)['Authorization'] = `Bearer ${token}`
     }
   },
   onResponseError({ response }) {

@@ -87,8 +87,8 @@ import { ref, onMounted } from 'vue';
 
 const route = useRoute();
 const loading = ref(true);
-const flight = ref(null);
-const selectedSeat = ref(null);
+const flight = ref<any>(null);
+const selectedSeat = ref<any>(null);
 const availableSeats = ref(['1A', '1B', '2A', '2B', '3A', '3B', '4A', '4B']);
 
 onMounted(async () => {
@@ -127,9 +127,7 @@ const formatDate = (date: string) => {
 };
 
 const bookFlight = () => {
-  navigateTo('/checkout', {
-    query: { type: 'flight', id: route.params.id, seat: selectedSeat.value },
-  });
+  navigateTo(`/checkout?type=flight&id=${route.params.id}&seat=${selectedSeat.value}`);
 };
 </script>
 

@@ -107,7 +107,7 @@ const filters = ref({
 });
 
 const loading = ref(false);
-const results = ref([]);
+const results = ref<any[]>([]);
 const airlines = ref(['Delta', 'United', 'American', 'Southwest', 'JetBlue']);
 
 const filteredFlights = computed(() => {

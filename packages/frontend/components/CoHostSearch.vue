@@ -51,12 +51,14 @@
 </template>
 
 <script setup lang="ts">
+import { useAuthStore } from '~/stores/auth'
+
 const filters = ref({
   location: '',
   service: '',
   availability: ''
 })
-const coHosts = ref([])
+const coHosts = ref<any[]>([])
 const loading = ref(false)
 const hasSearched = ref(false)
 
@@ -80,7 +82,7 @@ const hire = async (cohost: any) => {
   await $fetch('/api/co-hosts/hire', {
     method: 'POST',
     body: {
-      hostId: authStore.user.id,
+      hostId: useAuthStore().user?.id,
       coHostId: cohost.id,
       propertyId,
       terms: { type: 'percentage', value: 0.15 }

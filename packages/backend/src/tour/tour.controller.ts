@@ -1,6 +1,6 @@
 import { Controller, Post, Get, Delete, Patch, Body, Param, UseGuards } from '@nestjs/common';
 import { TourService } from './tour.service';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @Controller('properties')
 export class TourController {

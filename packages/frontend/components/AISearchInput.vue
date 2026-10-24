@@ -54,8 +54,8 @@ import { ref } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
 
 const searchQuery = ref('')
-const results = ref([])
-const extractedFilters = ref(null)
+const results = ref<any[]>([])
+const extractedFilters = ref<any>(null)
 const isLoading = ref(false)
 
 const debouncedSearch = useDebounceFn(async () => {
@@ -71,8 +71,8 @@ const debouncedSearch = useDebounceFn(async () => {
       method: 'POST',
       body: { query: searchQuery.value }
     })
-    results.value = response.results
-    extractedFilters.value = response.extractedFilters
+    results.value = (response as any).results
+    extractedFilters.value = (response as any).extractedFilters
   } catch (error) {
     console.error('Search failed:', error)
   } finally {

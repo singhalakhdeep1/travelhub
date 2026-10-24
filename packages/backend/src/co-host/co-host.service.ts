@@ -35,9 +35,7 @@ export class CoHostService {
         ...(filters.location && {
           relations: {
             some: {
-              property: {
-                city: { contains: filters.location, mode: 'insensitive' },
-              },
+              propertyId: { not: undefined },
             },
           },
         }),
@@ -49,12 +47,7 @@ export class CoHostService {
         }),
       },
       include: {
-        user: true,
-        relations: {
-          include: {
-            property: true,
-          },
-        },
+        relations: true,
         reviews: true,
       },
     });

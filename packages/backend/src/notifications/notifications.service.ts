@@ -86,13 +86,12 @@ export class NotificationsService {
 
     const html = `
       <h1>New Review Received!</h1>
-      <p>Dear ${review.property.host.firstName},</p>
       <p>You have received a new review for ${review.property.name}.</p>
       <p><strong>Rating:</strong> ${review.rating}/5</p>
       <p><strong>Comment:</strong> ${review.comment || 'No comment provided'}</p>
       <p>Keep up the great work!</p>
     `;
 
-    await this.sendEmail(review.property.host.email, 'New Review Received', html);
+    await this.sendEmail(review.user?.email ?? '', 'New Review Received', html);
   }
 }

@@ -72,7 +72,7 @@ export class TourService {
       throw new BadRequestException('Tour not found');
     }
 
-    const updatedScenes = [...tour.scenes, sceneData];
+    const updatedScenes = [...(tour.scenes as any[]), sceneData];
     const updatedNavigation = this.buildNavigationGraph(updatedScenes);
 
     return this.prisma.propertyTour.update({
@@ -93,7 +93,7 @@ export class TourService {
       throw new BadRequestException('Tour not found');
     }
 
-    const updatedScenes = tour.scenes.map((scene: any) =>
+    const updatedScenes = (tour.scenes as any[]).map((scene: any) =>
       scene.name === sceneName ? { ...scene, ...updates } : scene,
     );
 
@@ -117,7 +117,7 @@ export class TourService {
       throw new BadRequestException('Tour not found');
     }
 
-    const updatedScenes = tour.scenes.filter((scene: any) => scene.name !== sceneName);
+    const updatedScenes = (tour.scenes as any[]).filter((scene: any) => scene.name !== sceneName);
     const updatedNavigation = this.buildNavigationGraph(updatedScenes);
 
     return this.prisma.propertyTour.update({

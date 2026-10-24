@@ -1,6 +1,6 @@
 import { Controller, Post, Get, Body, Param, UseGuards } from '@nestjs/common';
 import { CoHostService } from './co-host.service';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @Controller('co-hosts')
 export class CoHostController {
